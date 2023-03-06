@@ -4,16 +4,21 @@ import { Navbar } from './layouts/NavbarAndFooter/Navbar'
 import { Footer } from './layouts/NavbarAndFooter/Footer';
 import { HomePage } from './layouts/HomePage/HomePage';
 import { SearchBooksPage } from './layouts/SearchBooksPage/SearchBooksPage';
-
+import { Routes, Route, Navigate, } from "react-router-dom";
 
 function App() {
   return (
-    <>
+    <div className='d-flex flex-column min-vh-100'>
       <Navbar></Navbar>
-      {/* <HomePage></HomePage> */}
-      <SearchBooksPage></SearchBooksPage>
+      <div className='flex-grow-1'>
+        <Routes>
+          <Route path="/" element={<HomePage />}></Route>
+          <Route path="/search" element={<SearchBooksPage />}></Route>
+          <Route path="*" element={<Navigate to='/'></Navigate>}></Route>
+        </Routes>
+      </div>
       <Footer></Footer>
-    </>
+    </div>
   );
 }
 
