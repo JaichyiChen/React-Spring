@@ -1,13 +1,11 @@
-package com.luv2read.springbootlibrary.entity;
+package com.luv2read.springbootlibrary.dao;
 
+import com.luv2read.springbootlibrary.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.luv2read.springbootlibrary.dao.Book;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 

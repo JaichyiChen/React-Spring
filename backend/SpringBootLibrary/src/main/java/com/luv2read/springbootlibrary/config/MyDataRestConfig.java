@@ -1,6 +1,7 @@
 package com.luv2read.springbootlibrary.config;
 
-import com.luv2read.springbootlibrary.dao.Book;
+import com.luv2read.springbootlibrary.entity.Book;
+import com.luv2read.springbootlibrary.entity.Review;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -21,10 +22,12 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 
         HttpMethod[] theUnsupportedActions = {HttpMethod.POST, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT};
 
-        //know what book we're using
+        //By default the ID for entities are hidden, we're exposing it and returning it with requests
         config.exposeIdsFor(Book.class);
+        config.exposeIdsFor(Review.class);
 
         disableHttpMethods(Book.class, config, theUnsupportedActions);
+        disableHttpMethods(Review.class, config, theUnsupportedActions);
 
         //	Configure CORS Mapping
         cors.addMapping(config.getBasePath() + "/**").allowedOrigins(theAllowedOrigins);

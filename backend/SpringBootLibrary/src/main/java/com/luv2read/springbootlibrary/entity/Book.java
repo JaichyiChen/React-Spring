@@ -1,4 +1,4 @@
-package com.luv2read.springbootlibrary.dao;
+package com.luv2read.springbootlibrary.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
