@@ -5,6 +5,8 @@ import axios from "axios";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { StarsReview } from "../Utils/StarsReview";
 import { CheckoutAndReviewBox } from "./CheckoutAndReview";
+import ReviewModel from "../../models/ReviewModel";
+import { LatestReviews } from "./LatestReviews";
 
 export const BookCheckoutPage = () => {
 
@@ -14,7 +16,13 @@ export const BookCheckoutPage = () => {
 
     let { bookId } = useParams();
 
+    //review state
+    const [reviews, setReviews] = useState<ReviewModel[]>([]);
+    const [totalStars, setTotalStars] = useState<number>(0);
+    const [isLoadingReview, setIsLoadingReview] = useState<boolean>(true);
 
+
+    //Fetch books
     useEffect(() => {
         const fetchBook = async () => {
             const baseUrl: string = `http://localhost:8080/api/books/${bookId}`
@@ -44,7 +52,49 @@ export const BookCheckoutPage = () => {
         fetchBook();
     }, [bookId]);
 
-    if (isLoading) {
+
+    //Fetch book reviews
+    useEffect(() => {
+        const fetchReview = async () => {
+            const baseUrl: string = `http://localhost:8080/api/reviews/search/findByBookId?bookId=${bookId}`;
+            try {
+                const response = await axios.get(baseUrl);
+                const responseData = response.data._embedded.reviews;
+
+                const loadedReviews: ReviewModel[] = [];
+
+                let weightedStarReviews: number = 0;
+
+                for (const key in responseData) {
+                    loadedReviews.push({
+                        id: responseData[key].id,
+                        userEmail: responseData[key].userEmail,
+                        date: responseData[key].date,
+                        rating: responseData[key].rating,
+                        book_id: responseData[key].bookId,
+                        reviewDescription: responseData[key].reviewDescription
+                    })
+                    weightedStarReviews += responseData[key].rating;
+                }
+                //round review to nearest 0.5
+                if (loadedReviews) {
+                    const round = (Math.round((weightedStarReviews / loadedReviews.length) * 2) / 2);
+                    setTotalStars(round);
+                }
+
+                setReviews(loadedReviews);
+                setIsLoadingReview(false);
+
+            } catch (error: any) {
+                setIsLoadingReview(false);
+                setHttpError(error.message);
+            }
+        }
+        fetchReview();
+    }, [bookId])
+
+
+    if (isLoading || isLoadingReview) {
         return (
             <SpinnerLoading></SpinnerLoading>
         )
@@ -72,12 +122,13 @@ export const BookCheckoutPage = () => {
                             <h2>{book?.title}</h2>
                             <h5 className='text-primary'>{book?.author}</h5>
                             <p className="lead">{book?.description}</p>
-                            <StarsReview rating={1.5} size={32}></StarsReview>
+                            <StarsReview rating={totalStars} size={32}></StarsReview>
                         </div>
                     </div>
                     <CheckoutAndReviewBox book={book} mobile={false}></CheckoutAndReviewBox>
                 </div>
                 <hr></hr>
+                <LatestReviews reviews={reviews} bookId={book?.id} mobile={false}></LatestReviews>
             </div>
             {/* mobile */}
             <div className="container d-lg-none mt-5">
@@ -91,11 +142,14 @@ export const BookCheckoutPage = () => {
                         <h2>{book?.title}</h2>
                         <h5 className='text-primary'>{book?.author}</h5>
                         <p className="lead">{book?.description}</p>
-                        <StarsReview rating={1.5} size={32}></StarsReview>
+                        <StarsReview rating={totalStars} size={32}></StarsReview>
                     </div>
                 </div>
                 <CheckoutAndReviewBox book={book} mobile={true}></CheckoutAndReviewBox>
+                <LatestReviews reviews={reviews} bookId={book?.id} mobile={true}></LatestReviews>
             </div>
+
+
         </div>
     );
 }
