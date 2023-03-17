@@ -33,4 +33,5 @@ build/
 .vscode/
 
 #Project properties
-backend\SpringBootLibrary\src\main\resources\application.properties
+*.properties
+application.properties
