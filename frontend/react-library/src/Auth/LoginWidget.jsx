@@ -7,6 +7,7 @@ import { SpinnerLoading } from "../layouts/Utils/SpinnerLoading";
 const LoginWidget = ({ config }) => {
   const { oktaAuth, authState } = useOktaAuth();
   const onSuccess = (tokens) => {
+        console.log(authState)
     oktaAuth.handleLoginRedirect(tokens);
   };
 
