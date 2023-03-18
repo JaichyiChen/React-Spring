@@ -24,6 +24,7 @@ function App() {
   const restoreOriginalUri = async (_oktaAuth: any, originalUri: any) => {
     navigate(toRelativeUrl(originalUri || '/', window.location.origin), { replace: true })
   }
+
   return (
     <div className='d-flex flex-column min-vh-100'>
       <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={customAuthHandler}>
