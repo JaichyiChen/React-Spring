@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 export const Heroes = () => {
 
     const { authState } = useOktaAuth();
-    console.log(authState)
-
+    console.log(authState);
     return (
         <div>
             {/* Desktop */}
