@@ -167,10 +167,11 @@ export const BookCheckoutPage = () => {
                 }
             }
             try {
-                const response = await axios.put(baseUrl, requestOptions);
+                const response = await axios.put(baseUrl, '', requestOptions);
                 console.log(response)
                 setIsCheckedOut(true);
             } catch (error: any) {
+                console.log(error);
                 throw new Error(error.message);
             }
         }
