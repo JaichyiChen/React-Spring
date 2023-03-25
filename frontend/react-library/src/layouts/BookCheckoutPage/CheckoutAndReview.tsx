@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import BookModel from "../../models/BookModel"
+import { LeaveAReview } from "../Utils/LeaveAReview"
 
 interface checkoutAndReviewProp {
     book: BookModel | undefined,
@@ -7,12 +8,13 @@ interface checkoutAndReviewProp {
     currentLoansCount: number,
     isAuthenticated: any,
     isCheckedOut: boolean,
-    checkoutBook: any
-
+    checkoutBook: any,
+    isReviewLeft: boolean
+    submitReview: any
 }
 
 
-export const CheckoutAndReviewBox = ({ book, mobile, currentLoansCount, isAuthenticated, isCheckedOut, checkoutBook }: checkoutAndReviewProp) => {
+export const CheckoutAndReviewBox = ({ book, mobile, currentLoansCount, isAuthenticated, isCheckedOut, checkoutBook, isReviewLeft, submitReview }: checkoutAndReviewProp) => {
 
     const buttonRender = () => {
         if (isAuthenticated) {
@@ -28,6 +30,20 @@ export const CheckoutAndReviewBox = ({ book, mobile, currentLoansCount, isAuthen
         }
         return (<Link to={'/login'} className='btn btn-success btn-lg'>Sign in</Link>)
     }
+
+    const reviewRender = () => {
+        if (isAuthenticated) {
+            if (!isReviewLeft) {
+                return (<LeaveAReview submitReview={submitReview}></LeaveAReview>)
+            }
+            else {
+                return (<p><b>Thank you for your review!</b></p>)
+            }
+        }
+        return (<div><hr /><p>Sign in to be able to leave a review</p></div>)
+    }
+
+
     return (
         <div className={mobile ? 'card d-flex mt-5 ' : 'container card col-3 d-flex mb-5'}>
             <div className="card-body container">
@@ -56,7 +72,7 @@ export const CheckoutAndReviewBox = ({ book, mobile, currentLoansCount, isAuthen
                     This number can change until placing order has been complete
                 </p>
                 <p>
-                    Sign in to be able to leave a review.
+                    {reviewRender()}
                 </p>
             </div>
         </div>
