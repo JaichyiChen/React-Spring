@@ -24,7 +24,7 @@ export const LatestReviews = ({ reviews, bookId, mobile }: reviewProps) => {
                         {reviews.slice(0, 3).map((review) => { return <Review review={review} key={review.id}></Review> })}
 
                         <div className='m-3'>
-                            <Link type='button' className='btn main-color btn-md text-white' to='/'>
+                            <Link type='button' className='btn main-color btn-md text-white' to={`/reviewList/${bookId}`}>
                                 Reach all reviews.
                             </Link>
                         </div>

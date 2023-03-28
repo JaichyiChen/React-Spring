@@ -105,7 +105,7 @@ export const BookCheckoutPage = () => {
             }
         }
         fetchReview();
-    }, [bookId, authState])
+    }, [bookId])
 
     //Fetch book review for current user
     useEffect(() => {
