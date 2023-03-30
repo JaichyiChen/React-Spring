@@ -8,9 +8,11 @@ import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { BookCheckoutPage } from './layouts/BookCheckoutPage/BookCheckoutPage';
 import { oktaConfig } from './lib/oktaConfig';
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js'
-import { Security, LoginCallback } from '@okta/okta-react';
+import { Security, LoginCallback, SecureRoute } from '@okta/okta-react';
 import LoginWidget from './Auth/LoginWidget';
 import { ReviewListPage } from './layouts/BookCheckoutPage/ReviewListPage/ReviewListPage';
+import { ShelfPage } from './layouts/ShelfPage/ShelfPage';
+import { Protected } from './Auth/Protected';
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -34,10 +36,13 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />}></Route>
             <Route path="/search" element={<SearchBooksPage />}></Route>
-            <Route path="reviewList/:bookId" element={<ReviewListPage />}></Route>
+            <Route path="/reviewList/:bookId" element={<ReviewListPage />}></Route>
             <Route path='/checkout/:bookId' element={<BookCheckoutPage />}></Route>
             <Route path='/login' element={<LoginWidget config={oktaConfig}></LoginWidget>}></Route>
             <Route path='/login/callback' element={<LoginCallback></LoginCallback>}></Route>
+            <Route path='/shelf' element={<Protected></Protected>}>
+              <Route path='' element={<ShelfPage></ShelfPage>}></Route>
+            </Route>
             <Route path="*" element={<Navigate to='/'></Navigate>}></Route>
           </Routes>
         </div>
