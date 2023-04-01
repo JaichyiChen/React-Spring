@@ -5,13 +5,18 @@ import com.luv2read.springbootlibrary.dao.BookRepository;
 import com.luv2read.springbootlibrary.dao.CheckoutRepository;
 import com.luv2read.springbootlibrary.entity.Book;
 import com.luv2read.springbootlibrary.entity.Checkout;
+import com.luv2read.springbootlibrary.responseModels.ShelfCurrentLoansResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -72,4 +77,47 @@ public class BookService {
         List<Checkout> checkoutList = checkoutRepository.findBooksByUserEmail(userEmail);
         return checkoutList.size();
     }
+
+    public List<ShelfCurrentLoansResponse> currentLoans(String userEmail) throws Exception{
+
+        List<ShelfCurrentLoansResponse> shelfCurrentLoansResponse = new ArrayList<>();
+
+        //get's a checkout list of books checked out with the userEmail
+        List<Checkout> checkoutList = checkoutRepository.findBooksByUserEmail(userEmail);
+
+        List<Long> bookIdList = new ArrayList<>();
+        for(Checkout i: checkoutList){
+            bookIdList.add(i.getBookId());
+        }
+
+        List<Book> books = bookRepository.findBooksByBookIds(bookIdList);
+
+        //compare the loan date and return date
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        //wrapping in optional because it might not exist
+        //stream to loop thru and find matching book id
+        //stop after first match
+        for(Book book: books){
+            Optional<Checkout> checkout = checkoutList.stream().filter(
+                    x ->  x.getBookId() == book.getId()).findFirst();
+
+
+            if(checkout.isPresent()){
+
+                Date d1 = sdf.parse(checkout.get().getReturnDate());
+                Date d2 = sdf.parse(LocalDate.now().toString());
+
+                //find the difference in date between return date and the current date
+                TimeUnit time = TimeUnit.DAYS;
+
+                long difference_In_Time = time.convert(d1.getTime() - d2.getTime(), TimeUnit.MILLISECONDS);
+
+                shelfCurrentLoansResponse.add(new ShelfCurrentLoansResponse(book, (int) difference_In_Time));
+            }
+
+        }
+        return shelfCurrentLoansResponse;
+    }
+
 }

@@ -1,10 +1,13 @@
 package com.luv2read.springbootlibrary.controller;
 
 import com.luv2read.springbootlibrary.entity.Book;
+import com.luv2read.springbootlibrary.responseModels.ShelfCurrentLoansResponse;
 import com.luv2read.springbootlibrary.service.BookService;
 import com.luv2read.springbootlibrary.utils.ExtractJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -17,6 +20,14 @@ public class BookController {
     public BookController(BookService bookService){
         this.bookService = bookService;
     }
+
+    //getting books currently loaned
+    @GetMapping("/secure/currentLoans")
+    public List<ShelfCurrentLoansResponse> currentLoans(@RequestHeader(value="Authorization") String token) throws Exception{
+        String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+        return bookService.currentLoans(userEmail);
+    }
+
 
     @PutMapping("/secure/checkout")
     public Book checkoutBook(@RequestHeader(value="Authorization") String token,
