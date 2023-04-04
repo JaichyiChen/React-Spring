@@ -7,6 +7,7 @@ import com.luv2read.springbootlibrary.entity.Book;
 import com.luv2read.springbootlibrary.entity.Checkout;
 import com.luv2read.springbootlibrary.responseModels.ShelfCurrentLoansResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -119,5 +120,41 @@ public class BookService {
         }
         return shelfCurrentLoansResponse;
     }
+    //return book for user
+    public void returnBook (String userEmail, Long bookId) throws Exception{
+            Optional<Book> book = bookRepository.findById(bookId);
+            //check in db that there is a record of current userEmail with the bookId
+            Checkout validateCheckout = checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
 
+            if(!book.isPresent() || validateCheckout == null){
+                throw new Exception("Book doesn't exist or not checked out by user");
+            }
+
+            //add available book count + 1
+            book.get().setCopiesAvailable(book.get().getCopiesAvailable()+1);
+            bookRepository.save(book.get());
+
+            //delete the entry in checkout repo
+            checkoutRepository.deleteById(validateCheckout.getId());
+    }
+
+    //renew the book for another 7 days
+    public void renewBook(String userEmail, Long bookId) throws Exception{
+        Checkout validateCheckout = checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
+
+        if(validateCheckout == null){
+            throw new Exception("Book doesn't exist or not checked out by user");
+        }
+
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date d1 = sdFormat.parse(validateCheckout.getReturnDate());
+        Date d2 = sdFormat.parse(LocalDate.now().toString());
+        //compare if the book is within the due date
+        if(d1.compareTo(d2) > 0 || d1.compareTo(d2) == 0){
+            validateCheckout.setReturnDate(LocalDate.now().plusDays(7).toString());
+        }
+
+        checkoutRepository.save(validateCheckout);
+    }
 }
