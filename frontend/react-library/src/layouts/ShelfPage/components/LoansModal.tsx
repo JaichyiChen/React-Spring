@@ -3,10 +3,12 @@ import ShelfCurrentLoans from "../../../models/ShelfCurrentLoans"
 interface loansModal {
     book: ShelfCurrentLoans;
     mobile: boolean;
+    returnBook: any;
+    renewLoan: any;
 }
 
 
-export const LoansModal = ({ book, mobile }: loansModal) => {
+export const LoansModal = ({ book, mobile, returnBook, renewLoan }: loansModal) => {
     return (
         <div className='modal fade' id={mobile ? `mobilemodal#${book.book.id}` : `modal${book.book.id}`}
             data-bs-backdrop='static' data-bs-keyboard='false' aria-labelledby='staticBackdropLabel'
@@ -42,10 +44,10 @@ export const LoansModal = ({ book, mobile }: loansModal) => {
                                 </p>}
                                 {book.daysLeft < 0 && <p className='text-danger'>past due by {book.daysLeft} days</p>}
                                 <div className='list-group mt-3'>
-                                    <button data-bs-dismiss='modal' className='list-group-item list-group-item-action' aria-current='true'>
+                                    <button onClick={() => returnBook(book.book.id)} data-bs-dismiss='modal' className='list-group-item list-group-item-action' aria-current='true' >
                                         Return Book
                                     </button>
-                                    <button data-bs-dismiss='modal' className={book.daysLeft < 0 ? "list-group-item list-group-item-action inactiveLink" : "list-group-item list-group-item-action"}>
+                                    <button data-bs-dismiss='modal' onClick={book.daysLeft < 0 ? (e) => e.preventDefault() : () => renewLoan(book.book.id)} className={book.daysLeft < 0 ? "list-group-item list-group-item-action inactiveLink" : "list-group-item list-group-item-action"}>
                                         {book.daysLeft < 0 ? "Late dues cannot be renewed" : "Renew for 7 days"}
                                     </button>
                                 </div>

@@ -15,6 +15,7 @@ export const Loans = () => {
     //current loans state
     const [currentLoans, setCurrentLoans] = useState<ShelfCurrentLoans[]>([]);
     const [isLoadingUserLoans, setIsLoadingUserLoans] = useState(true);
+    const [checkout, setCheckout] = useState(false);
 
     useEffect(() => {
         const fetchUserCurrentLoans = async () => {
@@ -42,7 +43,7 @@ export const Loans = () => {
             }
         }
         fetchUserCurrentLoans();
-    }, [authState])
+    }, [authState, checkout])
 
     if (isLoadingUserLoans) {
         return (<SpinnerLoading></SpinnerLoading>)
@@ -52,6 +53,41 @@ export const Loans = () => {
         return (<div className='container m-5'>
             <p>${httpError}</p>
         </div>)
+    }
+
+    const returnBook = async (bookId: number) => {
+        const url = `http://localhost:8080/api/books/secure/return?bookId=${bookId}`
+        const requestOptions = {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': "application/json"
+            }
+        }
+        try {
+            const response = await axios.put(url, '', requestOptions);
+
+        } catch (error: any) {
+            throw new Error("Something went wrong")
+        }
+        setCheckout(!checkout);
+    }
+
+    const renewLoan = async (bookId: number) => {
+        const url = `http://localhost:8080/api/books/secure/renew/loan?bookId=${bookId}`
+        const requestOptions = {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': "application/json"
+            }
+        }
+        try {
+            const response = await axios.put(url, '', requestOptions);
+
+        } catch (error: any) {
+            throw new Error("Something went wrong")
+        }
     }
 
     return (
@@ -94,7 +130,7 @@ export const Loans = () => {
                                 </div>
                             </div>
                             <hr />
-                            <LoansModal book={currentLoan} mobile={false}></LoansModal>
+                            <LoansModal book={currentLoan} mobile={false} returnBook={returnBook} renewLoan={renewLoan}></LoansModal>
                         </div>)}
 
                     </> : <>
@@ -145,7 +181,7 @@ export const Loans = () => {
                                 </div>
                             </div>
                             <hr />
-                            <LoansModal book={currentLoan} mobile={true}></LoansModal>
+                            <LoansModal book={currentLoan} mobile={true} returnBook={returnBook} renewLoan={renewLoan}></LoansModal>
                         </div>)}
                     </> : <>
                         <h3 className='mt-3'>Currently no loans</h3>
