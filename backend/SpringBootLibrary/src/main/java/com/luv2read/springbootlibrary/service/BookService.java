@@ -3,8 +3,10 @@ package com.luv2read.springbootlibrary.service;
 
 import com.luv2read.springbootlibrary.dao.BookRepository;
 import com.luv2read.springbootlibrary.dao.CheckoutRepository;
+import com.luv2read.springbootlibrary.dao.HistoryRepository;
 import com.luv2read.springbootlibrary.entity.Book;
 import com.luv2read.springbootlibrary.entity.Checkout;
+import com.luv2read.springbootlibrary.entity.History;
 import com.luv2read.springbootlibrary.responseModels.ShelfCurrentLoansResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
@@ -27,12 +29,15 @@ public class BookService {
 
     private CheckoutRepository checkoutRepository;
 
+    private HistoryRepository historyRepository;
+
 
     //constructor injection
     @Autowired
-    public BookService(BookRepository bookRepository, CheckoutRepository checkoutRepository){
+    public BookService(BookRepository bookRepository, CheckoutRepository checkoutRepository, HistoryRepository historyRepository){
         this.bookRepository = bookRepository;
         this.checkoutRepository = checkoutRepository;
+        this.historyRepository = historyRepository;
     }
 
     public Book checkoutBook(String userEmail, Long bookId) throws Exception{
@@ -136,6 +141,18 @@ public class BookService {
 
             //delete the entry in checkout repo
             checkoutRepository.deleteById(validateCheckout.getId());
+
+            //saving book history into db
+            History history = new History(userEmail,
+                    validateCheckout.getCheckoutDate(),
+                    validateCheckout.getReturnDate(),
+                    book.get().getTitle(),
+                    book.get().getAuthor(),
+                    book.get().getDescription(),
+                    book.get().getImage()
+            );
+
+            historyRepository.save(history);
     }
 
     //renew the book for another 7 days
