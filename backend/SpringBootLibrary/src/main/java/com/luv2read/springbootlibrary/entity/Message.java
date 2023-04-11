@@ -4,37 +4,34 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name="message")
+@Table(name="messages")
 @Data
-public class Messages {
+public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
 
-    private String email;
+    @Column(name="user_email")
+    private String userEmail;
 
+    @Column(name="title")
     private String title;
-
+    @Column(name="question")
     private String question;
-
+    @Column(name="admin_email")
     private String adminEmail;
-
+    @Column(name="response")
     private String response;
-
+    @Column(name="closed")
     private boolean closed;
 
-    public Messages(){
+    public Message(){
 
     }
-    public Messages(Long id, String email, String title, String question, String adminEmail, String reponse, boolean closed){
-        this.id = id;
-        this.email = email;
+    public Message(String title, String question){
         this.title = title;
         this.question = question;
-        this.adminEmail = adminEmail;
-        this.response = reponse;
-        this.closed = closed;
     }
 
 }
