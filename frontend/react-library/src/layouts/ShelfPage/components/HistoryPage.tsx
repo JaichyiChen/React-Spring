@@ -10,6 +10,7 @@ import { Pagination } from "../../Utils/Pagination";
 export const HistoryPage = () => {
 
 
+
     const { authState } = useOktaAuth();
     const [isLoadingHistory, setIsLoadingHistory] = useState(true);
     const [httpError, setHttpError] = useState(null);
