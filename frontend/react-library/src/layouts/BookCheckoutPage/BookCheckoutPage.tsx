@@ -124,13 +124,13 @@ export const BookCheckoutPage = () => {
                 try {
                     const reviewResponse = await axios.get(baseUrl, requestOptions);
                     setIsReviewLeft(reviewResponse.data);
-                    setIsLoadingUserReview(false);
 
                 } catch (error: any) {
                     setHttpError(error.message);
                     setIsLoadingUserReview(false);
                 }
             }
+            setIsLoadingUserReview(false);
 
         }
         fetchUserReviewBook();
@@ -151,13 +151,13 @@ export const BookCheckoutPage = () => {
                 try {
                     const response = await axios.get(baseUrl, requestOptions);
                     setCurrentLoansCount(response.data);
-                    setIsLoadingCurrentLoansCount(false);
 
                 } catch (error: any) {
                     setIsLoadingCurrentLoansCount(false);
                     setHttpError(error.message);
                 }
             }
+            setIsLoadingCurrentLoansCount(false);
         }
         fetchUserCurrentLoansCount();
     }, [authState, isCheckedOut])
@@ -177,7 +177,6 @@ export const BookCheckoutPage = () => {
                 try {
                     const bookCheckedout = await axios.get(baseUrl, requestOptions);
                     setIsCheckedOut(bookCheckedout.data);
-                    setIsLoadingBookCheckout(false);
 
                 } catch (error: any) {
                     setIsLoadingBookCheckout(false);
@@ -187,6 +186,7 @@ export const BookCheckoutPage = () => {
             }
             userCheckedOutBook();
         }
+        setIsLoadingBookCheckout(false);
 
     }, [authState, bookId])
 
