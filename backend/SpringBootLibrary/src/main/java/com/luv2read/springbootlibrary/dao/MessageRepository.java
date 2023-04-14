@@ -10,4 +10,7 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
     Page<Message> findByUserEmail (@RequestParam("user_email") String userEmail, Pageable pageable );
+
+    //for admins, finding questions that have yet been answered
+    Page<Message> findByClosed(@RequestParam("closed") boolean closed, Pageable pageable);
 }

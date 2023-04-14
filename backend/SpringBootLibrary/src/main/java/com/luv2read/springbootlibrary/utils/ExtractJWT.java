@@ -22,6 +22,7 @@ public class ExtractJWT {
         Map<String,String> map = new HashMap<>();
 
         for(String entry: entries) {
+            //split by semi colon since every is in JSON format
             String[] keyValue = entry.split(":");
             if (keyValue[0].equals(extraction)) {
 
