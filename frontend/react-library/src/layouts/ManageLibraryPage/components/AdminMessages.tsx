@@ -68,13 +68,13 @@ export const AdminMessages = () => {
         return <SpinnerLoading></SpinnerLoading>
     }
 
-    // if (httpError) {
-    //     return (
-    //         <div className="container m-5">
-    //             <p>{httpError}</p>
-    //         </div>
-    //     )
-    // }
+    if (httpError) {
+        return (
+            <div className="container m-5">
+                <p>{httpError}</p>
+            </div>
+        )
+    }
 
     const paginate = (page: number) => setCurrentPage(page);
 
@@ -96,7 +96,7 @@ export const AdminMessages = () => {
 
             try {
                 const response = await axios.put(url, JSON.stringify(adminRequestModel), requestOptions)
-                console.log(response);
+
 
             } catch (error: any) {
                 setHttpError(error.message)
