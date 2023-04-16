@@ -53,7 +53,7 @@ export const SearchBooksPage = () => {
                     author: responseData[key].author,
                     description: responseData[key].description,
                     copies: responseData[key].copies,
-                    copiesAvailable: responseData[key].copieAvailable,
+                    copiesAvailable: responseData[key].copiesAvailable,
                     category: responseData[key].category,
                     img: responseData[key].image,
                 })
@@ -150,27 +150,27 @@ export const SearchBooksPage = () => {
                                     <li onClick={() => {
                                         return categoryField('All');
                                     }}>
-                                        <a href="#" className='dropdown-item'>All</a>
+                                        <a className='dropdown-item'>All</a>
                                     </li>
                                     <li onClick={() => {
                                         return categoryField('FE');
                                     }}>
-                                        <a href="#" className='dropdown-item'>Front End</a>
+                                        <a className='dropdown-item'>Front End</a>
                                     </li>
                                     <li onClick={() => {
                                         return categoryField('BE');
                                     }}>
-                                        <a href="#" className='dropdown-item'>Back End</a>
+                                        <a className='dropdown-item'>Back End</a>
                                     </li>
                                     <li onClick={() => {
                                         return categoryField('Data');
                                     }}>
-                                        <a href="#" className='dropdown-item'>Data</a>
+                                        <a className='dropdown-item'>Data</a>
                                     </li>
                                     <li onClick={() => {
                                         return categoryField('Devops');
                                     }}>
-                                        <a href="#" className='dropdown-item'>Devops</a>
+                                        <a className='dropdown-item'>Devops</a>
                                     </li>
                                 </ul>
                             </div>
